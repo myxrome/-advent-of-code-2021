@@ -4,24 +4,18 @@ def normalize(input)
   input.map { |i| i.gsub(/\D+/, '').split('') }
 end
 
-def gamma(input)
-  input.transpose.map do |column|
-    column.group_by { |bit| bit }.max_by { |_, bits| bits.length }.first
-  end
-end
-
-def epsilon(gamma)
-  gamma.map { |bit| bit == '0' ? '1' : '0' }
+def bits_to_number(bits)
+  bits.inject(0) { |result, bit| (result << 1) | bit }
 end
 
 def power_consumption(input)
-  input = normalize(input)
+  gamma_bits = input.transpose.map do |column|
+    column.group_by { |bit| bit }.max_by { |_, bits| bits.length }.first.to_i
+  end
+  epsilon_bits = gamma_bits.map { |bit| bit ^ 1 }
 
-  gamma = gamma(input)
-  epsilon = epsilon(gamma)
-
-  gamma.join.to_i(2) * epsilon.join.to_i(2)
+  bits_to_number(gamma_bits) * bits_to_number(epsilon_bits)
 end
 
 input = File.readlines('input.txt')
-pp power_consumption(input)
+pp power_consumption(normalize(input))
