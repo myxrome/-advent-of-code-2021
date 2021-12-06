@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 def normalize(input)
-  input.map { |i| i.gsub(/\D+/, '').split('') }
+  input.map { |i| i.split('') }
 end
 
 # Part 1
@@ -51,6 +51,6 @@ def support_rating(input)
   ratings.map { |rating| rating.join.to_i(2) }.inject(1, :*)
 end
 
-input = File.readlines('input.txt')
+input = File.readlines('input.txt', chomp: true)
 pp power_consumption(input)
 pp support_rating(input)
